@@ -7,7 +7,7 @@ let flowTime = 0;
 module.exports = function(config, pluginOptions) {
   return {
     name: 'remove-flow',
-    resolve: {input: ['.js'], output: ['.jsx']},
+    resolve: {input: ['.js'], output: ['.js']},
     load(args) {
       console.log('esbuild.load', args.filePath);
       // console.log('ARGS', args);
@@ -18,7 +18,7 @@ module.exports = function(config, pluginOptions) {
         data.includes('// @flow') ||
         data.match(/^\/\*.*@flow.*\*\//)
       ) {
-        data = flowRemoveTypes(data, { pretty: true }).toString();
+        data = flowRemoveTypes(data, { pretty: false }).toString();
       }
 
       flowTime += Date.now() - startTime;

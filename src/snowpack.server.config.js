@@ -7,6 +7,7 @@ const esbuild = {
   },
   target: ['node14.15'],
   format: 'esm',
+  keepNames: false
   // mainFields: ['module']
   // platform: 'node'
 }

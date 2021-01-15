@@ -1,9 +1,9 @@
-import esbuild from 'esbuild';
-import buildPlugin from '../plugins/esbuild-flow.mjs'
+import * as esbuild from 'esbuild';
+import buildPlugin from '../plugins/esbuild-flow'
 
 const compile = (opts) => esbuild.build({
   bundle: true,
-  outdir: './snowpack/server2',
+  outdir: './snowpack/server',
   entryPoints: ['./src/main.js'],
   external: [
     'fusion-core',
@@ -14,6 +14,7 @@ const compile = (opts) => esbuild.build({
   define: {
     '__NODE__': true,
     '__BROWSER__': false,
+    '__DEV__': true
   },
   plugins: [
     buildPlugin
@@ -21,12 +22,8 @@ const compile = (opts) => esbuild.build({
   platform: 'node',
   sourcemap: true,
   format: 'cjs',
-  outExtension: {
-    '.js': '.cjs'
-  },
   target: 'node14',
   charset: 'utf8',
-  keepNames: true,
   incremental: true,
   minifySyntax: true,
   ...opts

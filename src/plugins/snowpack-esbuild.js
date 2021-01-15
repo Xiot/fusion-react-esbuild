@@ -1,47 +1,56 @@
-const {startService} = require('esbuild');
-const path = require('path');
-const {promises:fs} = require( 'fs');
-const flowRemoveTypes = require('flow-remove-types');
+import {startService} from 'esbuild';
+import path from 'path';
+import {promises as fs} from 'fs';
+import flowRemoveTypes from 'flow-remove-types';
 
-const basePath = '/Users/tchrs@uber.com/dev/github/xiot/fusion-react-esbuild/src';
+const removeEmptyImports = /^import ['|"].+$/gm;
+
+function getRelativePath(fullPath, config) {
+  for(let [sourcePath, opt] of Object.entries(config.mount)) {
+    if (fullPath.startsWith(sourcePath)) {
+      return path.join(opt.url, fullPath.slice(sourcePath.length))
+    }
+  }
+}
 
 let esbuildService = null;
 module.exports = function esbuildPlugin(config, opts) {
-  console.log(opts);
+  // console.log(opts);
+  let esbuildService = undefined;
   return {
     name: '@snowpack/plugin-esbuild-local',
     resolve: {
       input: ['.js'],
       output: ['.js'],
     },
+    async run() {
+      esbuildService = await startService();
+    },
     async load({filePath}) {
 
-      console.log('esbuild-local.load', filePath);
-      esbuildService = esbuildService || (await startService());
-      const originalSource = await fs.readFile(filePath, 'utf8')
-      const flowResult = flowRemoveTypes(originalSource, {pretty: false});
-      const flowMap = flowResult.generateMap();
-      flowMap.sources = [filePath];
+      const relativePath = getRelativePath(filePath, config);
+      console.log('esbuild-local.load', relativePath);
 
+      const originalSource = await fs.readFile(filePath, 'utf8')
+      const flowResult = flowRemoveTypes(originalSource, {pretty: true});
+      const flowMap = flowResult.generateMap();
+      flowMap.sources = [relativePath];
+
+      // Inline sourcemaps
       const flowMapUrl = `data:application/json;base64,` +
         Buffer.from(JSON.stringify(flowMap)).toString('base64');
       const contents = flowResult.toString() + '\n//# sourceMappingURL=' + flowMapUrl;
-      // const contents = flowResult.toString();
-
-      const isPreact = false;
-      let jsxFactory = config.buildOptions.jsxFactory ?? (isPreact ? 'h' : undefined);
-      let jsxFragment = config.buildOptions.jsxFragment ?? (isPreact ? 'Fragment' : undefined);
 
       const buildOptions = {
         loader: 'jsx',
         charset: 'utf8',
-        jsxFactory,
-        jsxFragment,
-        sourcefile: filePath, //path.relative(basePath, filePath),
-        sourcemap: config.buildOptions.sourcemap,
+        sourcefile: relativePath,
+        sourcemap: config.buildOptions.sourcemap ? 'both' : false,
         ...opts.esbuild
       };
+const startTime = Date.now();
       const {code, map: mapAsText, warnings} = await esbuildService.transform(contents, buildOptions);
+      console.log(relativePath, Date.now() - startTime);
       const map = mapAsText ? {
         ...JSON.parse(mapAsText),
         sourcesContent: [originalSource]
@@ -51,9 +60,11 @@ module.exports = function esbuildPlugin(config, opts) {
         console.error(`'!' ${filePath}
   ${warning.text}`);
       }
+
       return {
         '.js': {
-          code,
+          // Removes imports with no specifiers (assumes no side-effects)
+          code: code.replace(removeEmptyImports, ''),
           map,
         }
       };

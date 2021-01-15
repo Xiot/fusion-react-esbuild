@@ -1,7 +1,7 @@
 import flowRemoveTypes from 'flow-remove-types';
 import esbuild from 'esbuild';
 import fs from 'fs';
-import {Compiler} from './compiler/compiler.js';
+import {Compiler} from '../src/compiler/compiler.js';
 
 import refreshPluginFactory from '@snowpack/plugin-react-refresh';
 
