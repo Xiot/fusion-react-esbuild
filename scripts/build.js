@@ -11,6 +11,7 @@ const glob = require('tiny-glob');
     outdir: './lib',
     platform: 'node',
     format: 'cjs',
+    sourcemap: true
   }).then(result => {
     console.log(`SUCCESS: ${Date.now() - startTime}ms`);
   })

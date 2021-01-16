@@ -15,7 +15,6 @@ function getRelativePath(fullPath, config) {
 
 let esbuildService = null;
 module.exports = function esbuildPlugin(config, opts) {
-  // console.log(opts);
   let esbuildService = undefined;
   return {
     name: '@snowpack/plugin-esbuild-local',
@@ -26,10 +25,9 @@ module.exports = function esbuildPlugin(config, opts) {
     async run() {
       esbuildService = await startService();
     },
-    async load({filePath}) {
+    async load({filePath, isSSR, isDev}) {
 
       const relativePath = getRelativePath(filePath, config);
-      console.log('esbuild-local.load', relativePath);
 
       const originalSource = await fs.readFile(filePath, 'utf8')
       const flowResult = flowRemoveTypes(originalSource, {pretty: true});
@@ -46,11 +44,19 @@ module.exports = function esbuildPlugin(config, opts) {
         charset: 'utf8',
         sourcefile: relativePath,
         sourcemap: config.buildOptions.sourcemap ? 'both' : false,
-        ...opts.esbuild
+        ...opts.esbuild,
+        define: {
+          __NODE__: isSSR,
+          __BROWSER__: !isSSR,
+          __DEV__: isDev,
+          ...(opts.esbuild?.define ?? {})
+        }
       };
-const startTime = Date.now();
+      const startTime = Date.now();
+
       const {code, map: mapAsText, warnings} = await esbuildService.transform(contents, buildOptions);
-      console.log(relativePath, Date.now() - startTime);
+      console.log('build', relativePath, Date.now() - startTime);
+
       const map = mapAsText ? {
         ...JSON.parse(mapAsText),
         sourcesContent: [originalSource]

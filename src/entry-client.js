@@ -6,14 +6,41 @@ import path from 'path';
 import fetch from 'node-fetch';
 import clientConfig from './snowpack.client.config';
 import httpProxy from 'http-proxy';
+import {bus} from './bus';
 
 const {
   DEV_CLIENT_PORT = 4003,
   DEV_SERVER_PORT = 4002
 } = process.env;
 
+let status = 'server:down';
+
+function waitForServer() {
+  if (status !== 'server:ready') {
+    console.log('Waiting for server ...')
+    return new Promise((resolve) => {
+      bus.on('message', (type) => {
+        if (type === 'server:ready') {
+          console.log('Server is Ready. Continuing...');
+          resolve();
+        }
+      });
+    })
+  }
+  return Promise.resolve();
+}
+
+bus.on('message', (type, args) => {
+  switch(type) {
+    case 'server:down':
+    case 'server:ready':
+      console.log('set status', type);
+      status = type;
+  }
+})
+
 const serverProxy = httpProxy.createProxy({
-  forward: `http://localhost:${DEV_SERVER_PORT}`,
+  target: `http://localhost:${DEV_SERVER_PORT}`,
 });
 
 const readBody = emitter => {
@@ -27,32 +54,34 @@ const readBody = emitter => {
 (async function() {
 const snowpackConfig = createConfiguration({
   ...clientConfig,
-  // routes: [
-  //   {match: 'routes', src: '.*', async dest(req, res) {
-  //     console.log('proxy', req.url, req.headers);
+  routes: [
+    {match: 'routes', src: '.*', async dest(req, res) {
+      console.log('proxy', req.url, req.headers);
 
-  //     // serverProxy.once('proxyRes', async (proxyRes, req, res) => {
-  //     //   console.log('proxy res', proxyRes.statusCode, proxyRes.headers)
+      serverProxy.once('proxyRes', async (proxyRes, req, res) => {
+        console.log('proxy res', proxyRes.statusCode, proxyRes.headers)
 
-  //     //   const bodyText = await readBody(proxyRes);
+        const bodyText = await readBody(proxyRes);
 
-  //     //   Object.entries(proxyRes.headers)
-  //     //     .filter(([key]) => key !== 'content-length')
-  //     //     .forEach(([key, value]) => res.setHeader(key, value));
-  //     //   const contentType = proxyRes.headers['content-type'];
+        Object.entries(proxyRes.headers)
+          .filter(([key]) => key !== 'content-length')
+          .forEach(([key, value]) => res.setHeader(key, value));
+        const contentType = proxyRes.headers['content-type'];
 
-  //     //   if (contentType.includes('html')) {
-  //     //     const r = await snowpack.loadUrl('/index.html')
-  //     //     res.writeHead(proxyRes.statusCode, proxyRes.statusMessage);
-  //     //     res.end(r.contents.toString().replace('__RENDERED_ELEMENT__', bodyText));
-  //     //   } else {
-  //     //     res.writeHead(proxyRes.statusCode, proxyRes.statusMessage);
-  //     //     res.end(bodyText);
-  //     //   }
-  //     // })
-  //     serverProxy.web(req, res, {selfHandleResponse: false});
-  //   }}
-  // ]
+        if (contentType.includes('html')) {
+          const r = await snowpack.loadUrl('/index.html')
+          res.writeHead(proxyRes.statusCode, proxyRes.statusMessage);
+          res.end(r.contents.toString().replace('__RENDERED_ELEMENT__', bodyText));
+        } else {
+          res.writeHead(proxyRes.statusCode, proxyRes.statusMessage);
+          res.end(bodyText);
+        }
+      })
+      await waitForServer();
+
+      serverProxy.web(req, res, {selfHandleResponse: true});
+    }}
+  ]
 });
 
 // console.log('CONFIG', snowpackConfig);

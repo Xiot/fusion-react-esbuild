@@ -1,8 +1,18 @@
+
+// console.log('child');
+// console.log(process.cwd());
+// console.log(process.env);
+// console.log(require.resolve.paths('fusion-core'));
+// console.log(require.resolve('fusion-core'))
+
 // import appImport from './snowpack/server2/main.cjs';
 import http from 'http';
 import fetch from 'node-fetch';
 import {createPlugin, SSRBodyTemplateToken} from 'fusion-core';
 
+console.log('ARGS', process.argv)
+process.send('starting up');
+process.on('message', (...args) => console.log('R', ...args))
 const [,,mainPath] = process.argv;
 // console.log(mainPath);
 const appImport = require(mainPath).default;
@@ -38,4 +48,7 @@ const handler = app.callback();
 http.createServer((req, res) => {
   console.log('SERVER', req.url);
   handler(req,res);
-}).listen(DEV_SERVER_PORT, () => console.log('server', DEV_SERVER_PORT))
+}).listen(DEV_SERVER_PORT, () => {
+  console.log('server', DEV_SERVER_PORT)
+  process.send('server:ready');
+})

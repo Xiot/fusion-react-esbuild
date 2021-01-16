@@ -6582,6 +6582,11 @@ node-releases@^1.0.0-alpha.11, node-releases@^1.1.69:
   resolved "https://unpm.uberinternal.com/node-releases/-/node-releases-1.1.69.tgz#3149dbde53b781610cd8b486d62d86e26c3725f6"
   integrity sha1-MUnb3lO3gWEM2LSG1i2G4mw3JfY=
 
+node-watch@^0.7.1:
+  version "0.7.1"
+  resolved "https://unpm.uberinternal.com/node-watch/-/node-watch-0.7.1.tgz#0caaa6a6833b0d533487f953c52a6c787769ba7c"
+  integrity sha1-DKqmpoM7DVM0h/lTxSpseHdpunw=
+
 nodemon@^2.0.7:
   version "2.0.7"
   resolved "https://unpm.uberinternal.com/nodemon/-/nodemon-2.0.7.tgz#6f030a0a0ebe3ea1ba2a38f71bf9bab4841ced32"
@@ -8464,7 +8469,7 @@ source-map-resolve@^0.5.0:
     source-map-url "^0.4.0"
     urix "^0.1.0"
 
-source-map-support@^0.5.6, source-map-support@^0.5.9, source-map-support@~0.5.12, source-map-support@~0.5.19:
+source-map-support@^0.5.19, source-map-support@^0.5.6, source-map-support@^0.5.9, source-map-support@~0.5.12, source-map-support@~0.5.19:
   version "0.5.19"
   resolved "https://unpm.uberinternal.com/source-map-support/-/source-map-support-0.5.19.tgz#a98b62f86dcaf4f67399648c085291ab9e8fed61"
   integrity sha1-qYti+G3K9PZzmWSMCFKRq56P7WE=
