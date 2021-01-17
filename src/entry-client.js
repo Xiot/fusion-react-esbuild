@@ -3,7 +3,6 @@ import { startServer as startDevServer, createConfiguration } from 'snowpack';
 import URL from 'url';
 import path from 'path';
 
-import fetch from 'node-fetch';
 import clientConfig from './snowpack.client.config';
 import httpProxy from 'http-proxy';
 import {bus} from './bus';
@@ -43,6 +42,27 @@ const serverProxy = httpProxy.createProxy({
   target: `http://localhost:${DEV_SERVER_PORT}`,
 });
 
+let snowpack;
+serverProxy.on('proxyRes', async (proxyRes, req, res) => {
+  // console.log('proxy res', proxyRes.statusCode, proxyRes.headers)
+
+  const bodyText = await readBody(proxyRes);
+
+  Object.entries(proxyRes.headers)
+    .filter(([key]) => key !== 'content-length')
+    .forEach(([key, value]) => res.setHeader(key, value));
+  const contentType = proxyRes.headers['content-type'];
+
+  if (contentType.includes('html')) {
+    const r = await snowpack.loadUrl('/index.html')
+    res.writeHead(proxyRes.statusCode, proxyRes.statusMessage);
+    res.end(r.contents.toString().replace('__RENDERED_ELEMENT__', bodyText));
+  } else {
+    res.writeHead(proxyRes.statusCode, proxyRes.statusMessage);
+    res.end(bodyText);
+  }
+})
+
 const readBody = emitter => {
   return new Promise(resolve => {
     const data = [];
@@ -56,36 +76,25 @@ const snowpackConfig = createConfiguration({
   ...clientConfig,
   routes: [
     {match: 'routes', src: '.*', async dest(req, res) {
-      console.log('proxy', req.url, req.headers);
+      // console.log('proxy', req.url, req.headers);
 
-      serverProxy.once('proxyRes', async (proxyRes, req, res) => {
-        console.log('proxy res', proxyRes.statusCode, proxyRes.headers)
 
-        const bodyText = await readBody(proxyRes);
-
-        Object.entries(proxyRes.headers)
-          .filter(([key]) => key !== 'content-length')
-          .forEach(([key, value]) => res.setHeader(key, value));
-        const contentType = proxyRes.headers['content-type'];
-
-        if (contentType.includes('html')) {
-          const r = await snowpack.loadUrl('/index.html')
-          res.writeHead(proxyRes.statusCode, proxyRes.statusMessage);
-          res.end(r.contents.toString().replace('__RENDERED_ELEMENT__', bodyText));
-        } else {
-          res.writeHead(proxyRes.statusCode, proxyRes.statusMessage);
-          res.end(bodyText);
-        }
-      })
       await waitForServer();
 
-      serverProxy.web(req, res, {selfHandleResponse: true});
+      try {
+        const s = Date.now();
+        res.once('finish', () => console.log(Date.now() - s));
+        serverProxy.web(req, res, {selfHandleResponse: true});
+      } catch (ex) {
+        res.writeHead(500, {'content-type': 'application/json'});
+        res.end(JSON.stringify({message: 'failed to forward request. ' + ex.message, stack: ex.stack}))
+      }
     }}
   ]
 });
 
 // console.log('CONFIG', snowpackConfig);
-const snowpack = await startDevServer({
+snowpack = await startDevServer({
   config: snowpackConfig,
   // cwd: '/Users/tchrs@uber.com/dev/github/xiot/fusion-react-esbuild/src',
 });

@@ -1,7 +1,7 @@
 import nodemon from 'nodemon';
 import {Compiler} from './compiler/compiler.js';
 import path from 'path';
-import watch from 'node-watch';
+import {watch} from 'chokidar';
 import {fork} from 'child_process';
 import {bus} from './bus';
 
@@ -16,15 +16,11 @@ const rebuild = () => {
 }
 
 function startServer() {
-  const resolvedPath = require.resolve('fusion-build/lib/entry-server-instance.js');
+
   const paths = require.resolve.paths('fusion-build')
     .filter(x => !x.endsWith('fusion-build/node_modules'));
 
-    const buildDir = path.join(process.cwd(), './snowpack/server')
-
-    // const watcher = nodemon({
-    //   script: path.join(buildDir, './entry-server-instance.js'),
-      // args: [path.join(buildDir, './main.js')],
+  const buildDir = path.join(process.cwd(), './snowpack/server')
 
   return fork(
     path.join(__dirname, './entry-server-instance.js'),
@@ -49,17 +45,17 @@ let instance = null;
   instance = startServer()
 
   console.log('watching files');
-  const watcher = watch('./src', {filter: /\.jsx?$/, recursive: true, delay: 100}, async (...args) => {
-    console.log('file changes', ...args)
-    bus.emit('message', 'server:down')
+  const watcher = watch('./src/**/*', {persistent: true, ignoreInitial: true})
+    .on('all', debounce(100, async (paths) => {
+      console.log('file changes', paths)
+      bus.emit('message', 'server:down')
 
-    await rebuild();
-    await delay(1000);
+      await rebuild();
 
-    instance.kill('SIGINT');
+      instance.kill('SIGINT');
 
-    instance = startServer();
-  });
+      instance = startServer();
+  }));
 
   process.on('SIGINT', () => {
     watcher.close();
@@ -68,44 +64,22 @@ let instance = null;
     process.exit();
   })
 
-// c.dispose();
-// console.log('after');
-// // await import('./entry-server-instance.js');
-// let tick;
-// // return;
-
-// console.log('cwd', process.cwd())
-// const buildDir = path.join(process.cwd(), './snowpack/server')
-
-// const watcher = nodemon({
-//   script: path.join(buildDir, './entry-server-instance.js'),
-//   args: [path.join(buildDir, './main.js')],
-//   ext: 'js',
-//   watch: [
-//     'src/**/*.js'
-//   ]
-// })
-// .on('start', x =>  {
-
-//   console.log('started', Date.now() - tick);
-// })
-// .on('restart', x => {
-//   tick = Date.now();
-//   console.log('restarted', x);
-//   rebuild();
-// })
-// .on('exit', () => {
-//   console.log('exit')
-// })
-// .once('quit', () => {
-//   console.log('quitting');
-//   // c.dispose()
-// })
-// ;
-
-// process.on('SIGINT', () => {
-
-//   watcher.emit('quit')
-//   process.exit(0);
-// });
 })();
+
+function debounce(duration, handler) {
+
+  let paths = []
+  let handle = null;
+  return (event, path) => {
+    paths.push(path);
+    if (handle) {
+      clearTimeout(handle);
+    }
+    handle = setTimeout(() => {
+      const clone = [...paths];
+      paths = [];
+      handle = null;
+      handler(clone);
+    }, duration);
+  }
+}

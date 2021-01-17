@@ -32,7 +32,8 @@ bus.on('message', (...args) => {
   console.log('ENTRY MESSAGE', ...args);
 });
 
-const args = process.argv.slice(2);
+console.log(process.argv);
+const args = process.argv.slice(1);
 if (args[0] === 'client') {
   const {execSync} = require('child_process');
   execSync('snowpack build --config ../fusion-react-esbuild/lib/snowpack.client.config.js');

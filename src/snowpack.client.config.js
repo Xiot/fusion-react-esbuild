@@ -43,19 +43,6 @@ module.exports = {
   },
   plugins: [
     [path.join(__dirname, './plugins/snowpack-esbuild.js'), {esbuild}],
-    // [path.join(__dirname, './plugins/snowpack-flow.js')],
-    // ['@snowpack/plugin-babel', {
-    //   input: ['.js'],
-    //   transformOptions: {
-    //     presets: ['@babel/preset-flow', '@babel/preset-react'],
-    //     plugins: [
-    //       ['babel-plugin-transform-prune-unused-imports', {
-    //         falsyExpressions: ['__NODE__'],
-    //         trutyExpressions: ['__BROWSER__']
-    //       }]
-    //     ]
-    //   }
-    // }],
     [path.join(__dirname, './plugins/babel-transform'), {
       transformOptions: {
         plugins: [

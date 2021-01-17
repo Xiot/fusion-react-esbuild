@@ -3,6 +3,7 @@ const glob = require('tiny-glob');
 
 (async () => {
   const entryPoints = await glob('./src/**/*.{cjs,js}');
+console.log(entryPoints);
 
   const startTime = Date.now();
   esbuild.build({
