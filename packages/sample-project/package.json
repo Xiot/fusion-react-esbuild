@@ -1,0 +1,27 @@
+{
+  "name": "fusion-build-sample",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "https://github.com/Xiot/fusion-build-sample.git",
+  "author": "Chris Thomas <tchrs@uber.com>",
+  "license": "MIT",
+  "private": true,
+  "dependencies": {
+    "@snowpack/plugin-react-refresh": "^2.4.0",
+    "fusion-build": "workspace:packages/fusion-build",
+    "fusion-core": "^2.2.5",
+    "fusion-react": "^4.0.7",
+    "node-fetch": "^2.6.1",
+    "react": "^16.12.0",
+    "react-dom": "^16.12.0"
+  },
+  "devDependencies": {
+    "fusion-cli": "^2.16.1"
+  },
+  "scripts": {
+    "dev": "fusion-build",
+    "dev:fusion": "yarn run fusion dev --port 4080",
+    "generate-certs": "npx devcert-cli localhost && mv localhost.key snowpack.key && mv localhost.cert snowpack.crt"
+  },
+  "sideEffects": false
+}
