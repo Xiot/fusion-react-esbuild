@@ -30,6 +30,7 @@ http.createServer((req, res) => {
   res.on('finish', () => {
     console.log(`[${pad(Date.now() - startTime)}] ${res.statusCode} - ${req.method} ${req.url}`)
   });
+
   handler(req,res);
 }).listen(DEV_SERVER_PORT, () => {
   console.log('server', DEV_SERVER_PORT)

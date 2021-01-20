@@ -48,9 +48,7 @@ const serverProxy = httpProxy.createProxy({
 });
 
 let snowpack;
-serverProxy.on('proxyReq', async (proxyReq, req, res) => {
-  console.log('req', req.headers)
-})
+
 serverProxy.on('proxyRes', async (proxyRes, req, res) => {
   // console.log('proxy res', proxyRes.statusCode, proxyRes.headers)
 
@@ -94,14 +92,6 @@ const snowpackConfig = createConfiguration({
       await waitForServer();
 
       try {
-        const s = Date.now();
-        console.log('req', req.url, req.headers);
-        if (req.headers[':authority'])
-          req.headers.host = req.headers[':authority']
-        delete req.headers[':method']
-        delete req.headers[':authority']
-        delete req.headers[':scheme']
-        delete req.headers[':path']
         serverProxy.web(req, res, {selfHandleResponse: true});
       } catch (ex) {
         console.log(ex);

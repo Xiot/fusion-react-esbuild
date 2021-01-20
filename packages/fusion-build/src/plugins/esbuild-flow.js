@@ -14,7 +14,7 @@ export default {
         data.match(/^\/\*.*@flow.*\*\//)
       ) {
 
-        const result = flowRemoveTypes(data, { pretty: true, });
+        const result = flowRemoveTypes(data, { pretty: true, ignoreUninitializedFields: true});
         data = result.toString();
         data += `\n//# sourceMappingURL=${path.basename(args.path)}.map}`
       }
