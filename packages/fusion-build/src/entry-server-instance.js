@@ -1,5 +1,6 @@
 import http from 'http';
-import {createPlugin, SSRBodyTemplateToken} from 'fusion-core';
+import {createPlugin, SSRBodyTemplateToken, consumeSanitizedHTML, html} from 'fusion-core';
+// import {SSRBodyTemplate} from 'fusion-cli/plugins/ssr-plugin';
 
 const [,,mainPath] = process.argv;
 const appImport = require(mainPath).default;
@@ -11,17 +12,26 @@ const {
 } = process.env;
 
 const app = appImport();
-
+console.log(html.toString()); //`<div>${2}</div>`);
 const ssrPlugin = createPlugin({
   deps: {},
   provides() {
     return ctx => {
-      console.log('SSR');
-      return ctx.rendered;
+      const {htmlAttrs, bodyAttrs, title, head, body} = ctx.template;
+      console.log('SSR',
+      htmlAttrs,
+      bodyAttrs,
+      title,
+      head.map(x => consumeSanitizedHTML(x)).join(''),
+      body.map(x => consumeSanitizedHTML(x)).join('')
+      )
+      // console.log('SSR', ctx.rendered);
+      return "<html><body>" + body.map(x => consumeSanitizedHTML(x)).join('') + ctx.rendered + "</body></html>";
     }
   }
 })
 app.register(SSRBodyTemplateToken, ssrPlugin);
+// app.register(SSRBodyTemplateToken, SSRBodyTemplate);
 
 const handler = app.callback();
 

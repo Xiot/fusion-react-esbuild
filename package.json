@@ -8,6 +8,9 @@
     "esinstall@1.0.3": {
       "unplugged": true
     },
+    "fusion-plugin-i18n@2.4.8": {
+      "unplugged": false
+    },
     "http-proxy@1.18.1": {
       "unplugged": true
     },
@@ -17,5 +20,8 @@
   },
   "scripts": {
     "frt": "flow-remove-types"
+  },
+  "resolutions": {
+    "fusion-plugin-i18n": "patch:fusion-plugin-i18n@2.4.8#./patches/fusion-plugin-i18n.patch"
   }
 }

@@ -19,6 +19,7 @@
     "esbuild": "^0.8.31",
     "esinstall": "^1.0.3",
     "flow-bin": "^0.142.0",
+    "fusion-cli": "^2.16.1",
     "http-proxy": "^1.18.1",
     "rollup-plugin-pnp-resolve": "^2.0.0",
     "snowpack": "^3.0.11",

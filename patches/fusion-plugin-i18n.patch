@@ -1,0 +1,32 @@
+diff --git a/dist-node-cjs/node.js b/dist-node-cjs/node.js
+index 6d15b9937ee4edad976bd4066b7600b45151db63..2a2a4bf31db020e058b6d8ab5eca66e6034a8bf2 100644
+--- a/dist-node-cjs/node.js
++++ b/dist-node-cjs/node.js
+@@ -27,7 +27,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
+  * This source code is licensed under the MIT license found in the
+  * LICENSE file in the root directory of this source tree.
+  *
+- * 
++ *
+  */
+ 
+ /* eslint-env node */
+@@ -146,7 +146,7 @@ const pluginFactory = () => (0, _fusionCore.createPlugin)({
+         const i18n = plugin.from(ctx); // get the webpack chunks that are used and serialize their translations
+ 
+         const chunks = [...ctx.syncChunks, ...ctx.preloadChunks];
+-        const translations = {};
++        let translations = {};
+         const possibleTranslations = i18n.translations ? Object.keys(i18n.translations) : [];
+         chunks.forEach(id => {
+           const keys = Array.from(chunkTranslationMap.translationsForChunk(id));
+@@ -162,6 +162,9 @@ const pluginFactory = () => (0, _fusionCore.createPlugin)({
+             }
+           });
+         }); // i18n.locale is actually a locale.Locale instance
++        if (chunks.length === 0) {
++          translations = {...i18n.translations}
++        }
+ 
+         if (!i18n.locale) {
+           throw new Error('i18n.locale was empty');

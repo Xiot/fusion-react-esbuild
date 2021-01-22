@@ -3444,6 +3444,18 @@ __metadata:
   languageName: node
   linkType: hard
 
+"co-body@npm:^6.0.0":
+  version: 6.1.0
+  resolution: "co-body@npm:6.1.0"
+  dependencies:
+    inflation: ^2.0.0
+    qs: ^6.5.2
+    raw-body: ^2.3.3
+    type-is: ^1.6.16
+  checksum: 9be4361e91f6cc7d21a65f52b306feb79a78047ab484622fbae72f6ec3f704be32155899624bc4066bc038c7f95f2fcb29a7f20ac51a3e919d51b3a6c9b5c301
+  languageName: node
+  linkType: hard
+
 "co@npm:^4.6.0":
   version: 4.6.0
   resolution: "co@npm:4.6.0"
@@ -3738,6 +3750,13 @@ __metadata:
   version: 0.1.1
   resolution: "copy-descriptor@npm:0.1.1"
   checksum: c052cf571ff6b69b604607a3d41f03cb742af9472026013e690ab33e1bef5e64930c53a5f881dc79c7e4f5ccc3cea0ebb9f420315d3690989329088976b68ee9
+  languageName: node
+  linkType: hard
+
+"copy-to@npm:^2.0.1":
+  version: 2.0.1
+  resolution: "copy-to@npm:2.0.1"
+  checksum: a34eb9de0338aa0283208a0904e1572f450cbdf0969d6958ddd71ffa42b3eec91fa81196fe248d7855a68e2bc3f62124f5d58551e540ac5a8b64d34761484cd2
   languageName: node
   linkType: hard
 
@@ -5404,7 +5423,10 @@ fsevents@~2.1.2:
     fusion-build: "workspace:packages/fusion-build"
     fusion-cli: ^2.16.1
     fusion-core: ^2.2.5
+    fusion-plugin-i18n-react: ^3.1.9
+    fusion-plugin-universal-events: ^2.1.8
     fusion-react: ^4.0.7
+    fusion-tokens: ^2.1.6
     node-fetch: ^2.6.1
     react: ^16.12.0
     react-dom: ^16.12.0
@@ -5423,6 +5445,7 @@ fsevents@~2.1.2:
     esinstall: ^1.0.3
     flow-bin: ^0.142.0
     flow-remove-types: ^2.142.0
+    fusion-cli: ^2.16.1
     http-proxy: ^1.18.1
     nodemon: ^2.0.7
     pirates: ^4.0.1
@@ -5518,12 +5541,68 @@ fsevents@~2.1.2:
   languageName: node
   linkType: hard
 
+"fusion-plugin-i18n-react@npm:^3.1.9":
+  version: 3.1.9
+  resolution: "fusion-plugin-i18n-react@npm:3.1.9"
+  dependencies:
+    fusion-plugin-i18n: 2.4.8
+    prop-types: ^15.7.2
+  peerDependencies:
+    fusion-core: 2.2.5
+    fusion-react: 4.0.7
+    react: ^16.12.0
+  checksum: fd36059772e524ebe3dcf2b58ac2ebacdbdc154eaddb3152c9b76beefa84a84b8943b63ca8fd55c881ba1733c6b4f6c82c225837a953e43eb7aa2c8c78ec112e
+  languageName: node
+  linkType: hard
+
+fusion-plugin-i18n@2.4.8:
+  version: 2.4.8
+  resolution: "fusion-plugin-i18n@npm:2.4.8"
+  dependencies:
+    koa-bodyparser: ^4.2.1
+    locale: ^0.1.0
+  peerDependencies:
+    fusion-core: 2.2.5
+    fusion-plugin-universal-events: 2.1.8
+    fusion-tokens: 2.1.6
+  checksum: 5bc9ee42af9a9829a779ca5e70288121f6b42b183b271335394bab07457efa34b04930be4c88f465a9819b99c3e550da26a6e5c7935ad3d1d9bd70aed835bb29
+  languageName: node
+  linkType: hard
+
+"fusion-plugin-i18n@patch:fusion-plugin-i18n@2.4.8#./patches/fusion-plugin-i18n.patch::locator=fusion-react-esbuild%40workspace%3A.":
+  version: 2.4.8
+  resolution: "fusion-plugin-i18n@patch:fusion-plugin-i18n@npm%3A2.4.8#./patches/fusion-plugin-i18n.patch::version=2.4.8&hash=362f8d&locator=fusion-react-esbuild%40workspace%3A."
+  dependencies:
+    koa-bodyparser: ^4.2.1
+    locale: ^0.1.0
+  peerDependencies:
+    fusion-core: 2.2.5
+    fusion-plugin-universal-events: 2.1.8
+    fusion-tokens: 2.1.6
+  checksum: 37f7424ae1a21bac5a724b42ddc37c5fb56c81854609a336979f141c3ccea33950c58ead2e7dd89428b0bce67f000281f262dd0a570d2cfa40536cb810a6b1ed
+  languageName: node
+  linkType: hard
+
+"fusion-plugin-universal-events@npm:*, fusion-plugin-universal-events@npm:^2.1.8":
+  version: 2.1.8
+  resolution: "fusion-plugin-universal-events@npm:2.1.8"
+  dependencies:
+    koa-bodyparser: ^4.2.1
+  peerDependencies:
+    fusion-core: 2.2.5
+    fusion-tokens: 2.1.6
+  checksum: 2f162b97540381ba22ab1088952ec380140607dc796961ab3b2c022318efc49dda9b11803a2f074866f6f91bcced68992587a820d2aef7d4c31a42fbbe6927e7
+  languageName: node
+  linkType: hard
+
 "fusion-react-esbuild@workspace:.":
   version: 0.0.0-use.local
   resolution: "fusion-react-esbuild@workspace:."
   dependenciesMeta:
     esinstall@1.0.3:
       unplugged: true
+    fusion-plugin-i18n@2.4.8:
+      unplugged: false
     http-proxy@1.18.1:
       unplugged: true
     snowpack@3.0.11:
@@ -5547,7 +5626,7 @@ fsevents@~2.1.2:
   languageName: node
   linkType: hard
 
-"fusion-tokens@npm:2.1.6":
+"fusion-tokens@npm:*, fusion-tokens@npm:2.1.6, fusion-tokens@npm:^2.1.6":
   version: 2.1.6
   resolution: "fusion-tokens@npm:2.1.6"
   peerDependencies:
@@ -6038,6 +6117,19 @@ fsevents@~2.1.2:
   languageName: node
   linkType: hard
 
+"http-errors@npm:1.7.3, http-errors@npm:~1.7.2":
+  version: 1.7.3
+  resolution: "http-errors@npm:1.7.3"
+  dependencies:
+    depd: ~1.1.2
+    inherits: 2.0.4
+    setprototypeof: 1.1.1
+    statuses: ">= 1.5.0 < 2"
+    toidentifier: 1.0.0
+  checksum: 563ae4a3f19c89029212922bade6ffcd0e4b7fa52e539f08c8f6941de7eaccb00bf76cb7692662192f2f0d567d4ac1f9d6a3d0ee70b166c8540cf791497f90ea
+  languageName: node
+  linkType: hard
+
 "http-errors@npm:^1.6.3, http-errors@npm:^1.7.3":
   version: 1.8.0
   resolution: "http-errors@npm:1.8.0"
@@ -6060,19 +6152,6 @@ fsevents@~2.1.2:
     setprototypeof: 1.1.0
     statuses: ">= 1.4.0 < 2"
   checksum: 850a3bf69ffc56c5151cea4a31bdf47412b7a6af3ee3f4fc92d3c4d90f8398d8843806f0d81916b310b661eed93722272cf2d41c2cac2fd5d1d1c66d4077942c
-  languageName: node
-  linkType: hard
-
-"http-errors@npm:~1.7.2":
-  version: 1.7.3
-  resolution: "http-errors@npm:1.7.3"
-  dependencies:
-    depd: ~1.1.2
-    inherits: 2.0.4
-    setprototypeof: 1.1.1
-    statuses: ">= 1.5.0 < 2"
-    toidentifier: 1.0.0
-  checksum: 563ae4a3f19c89029212922bade6ffcd0e4b7fa52e539f08c8f6941de7eaccb00bf76cb7692662192f2f0d567d4ac1f9d6a3d0ee70b166c8540cf791497f90ea
   languageName: node
   linkType: hard
 
@@ -6233,6 +6312,13 @@ fsevents@~2.1.2:
   version: 1.0.4
   resolution: "infer-owner@npm:1.0.4"
   checksum: 56aa1d87b05936947765b1d9ace5f8d7ccd8cf6ccc1d69b67e8eaaee0e1ee2960d5accd51deb50d884665a5a1af3bcbb80f5d249c01a00280365bba59db9687b
+  languageName: node
+  linkType: hard
+
+"inflation@npm:^2.0.0":
+  version: 2.0.0
+  resolution: "inflation@npm:2.0.0"
+  checksum: 05b9472808b70844e0305371d5df6b757847de796a2bcc1d9526ad394a82ff469112515ddcc90f5d682df674d4e4735311c10fcbc4b533b2fc0f56e2aaa13417
   languageName: node
   linkType: hard
 
@@ -7585,6 +7671,16 @@ fsevents@~2.1.2:
   languageName: node
   linkType: hard
 
+"koa-bodyparser@npm:^4.2.1":
+  version: 4.3.0
+  resolution: "koa-bodyparser@npm:4.3.0"
+  dependencies:
+    co-body: ^6.0.0
+    copy-to: ^2.0.1
+  checksum: 826198150480b1850b56683d8d8521bc1ccb045e840ee1d5365ca5e35922c7a907d6cf211953a7290ff040bee89c020dc188c17400f05c1c033a05d3016cd499
+  languageName: node
+  linkType: hard
+
 "koa-compose@npm:^3.0.0":
   version: 3.2.1
   resolution: "koa-compose@npm:3.2.1"
@@ -7739,6 +7835,13 @@ fsevents@~2.1.2:
     emojis-list: ^3.0.0
     json5: ^1.0.1
   checksum: 9fd690e57ad78d32ff2942383b4a7a175eba575280ba5aca3b4d03183fec34aa0db314f49bd3301adf7e60b02471644161bf53149e8f2d18fd6a52627e95a927
+  languageName: node
+  linkType: hard
+
+"locale@npm:^0.1.0":
+  version: 0.1.0
+  resolution: "locale@npm:0.1.0"
+  checksum: 8e15093562cff63133ce4dad2314f8b93e939b608cf56e9940ab2f0bb44dd1cd9d8b5a67bd36c669f3c1b526462dddd51945ebf332b2dff1114ce37798737256
   languageName: node
   linkType: hard
 
@@ -9392,6 +9495,13 @@ fsevents@~2.1.2:
   languageName: node
   linkType: hard
 
+"qs@npm:^6.5.2":
+  version: 6.9.6
+  resolution: "qs@npm:6.9.6"
+  checksum: 853715ab6d685aad829c984997f4c7dc90665a8b652478d2e3c06be6968846e5d04adaf1eb2f4977ef544a194a376f0fa65734ee27a4d535e1ed8cb205bf5cce
+  languageName: node
+  linkType: hard
+
 "qs@npm:~6.5.2":
   version: 6.5.2
   resolution: "qs@npm:6.5.2"
@@ -9455,6 +9565,18 @@ fsevents@~2.1.2:
     iconv-lite: 0.4.24
     unpipe: 1.0.0
   checksum: 46dc02f8b4f358786d41e18fb55533fbe4702d390e22bbe2b9c98c88dec41cab23ea2315f3ae0bf4bc0213a2872c89943d3df6857f4e21f996ea9d2d92f1bcaa
+  languageName: node
+  linkType: hard
+
+"raw-body@npm:^2.3.3":
+  version: 2.4.1
+  resolution: "raw-body@npm:2.4.1"
+  dependencies:
+    bytes: 3.1.0
+    http-errors: 1.7.3
+    iconv-lite: 0.4.24
+    unpipe: 1.0.0
+  checksum: dc56e010d276f2fc3a17c2dd071f857917cd3734f64051488c845a9878a1eb47e03a9644861f135568d8ab4c2062072700b73060956b36f3a987025bc809402f
   languageName: node
   linkType: hard
 
