@@ -2,6 +2,10 @@
 <html>
   <head>
     <title>ESBuild Test 2</title>
+    <link rel="modulepreload" href="/_snowpack/pkg/react-dom.js" as="script" />
+    <link rel="modulepreload" href="/_snowpack/pkg/react.js" as="script" />
+    <link rel="modulepreload" href="/_snowpack/pkg/fusion-react.js" as="script" />
+    <link rel="modulepreload" href="/main.js" as="script" />
     <script type="module">
       import start from '/main.js';
       import ReactDOM from 'react-dom';

@@ -7285,6 +7285,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["fusion-core", "npm:2.2.5"],
             ["fusion-tokens", "virtual:a7ed149397ff21c139d9efbf5124ee874a93f514d319f87746ee16f1ebda7027610da89fc97feeaed1b7d18945c494385fbe93907350b1fb623e0f663209cf53#npm:2.1.6"],
             ["http-proxy", "npm:1.18.1"],
+            ["http2-proxy", "npm:5.0.51"],
             ["nodemon", "npm:2.0.7"],
             ["pirates", "npm:4.0.1"],
             ["react", "npm:16.14.0"],
@@ -7319,6 +7320,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["fusion-cli", "virtual:7fc76666031b5084fa7ac063cd43aee29ca18b5480012c19764db4bfa9c1afee59e4627ae432ac3bc64943a8a49f3d63fd94a4ea763d3293b93f3a33d67dc850#npm:2.16.1"],
             ["fusion-tokens", "virtual:7fc76666031b5084fa7ac063cd43aee29ca18b5480012c19764db4bfa9c1afee59e4627ae432ac3bc64943a8a49f3d63fd94a4ea763d3293b93f3a33d67dc850#npm:2.1.6"],
             ["http-proxy", "npm:1.18.1"],
+            ["http2-proxy", "npm:5.0.51"],
             ["nodemon", "npm:2.0.7"],
             ["pirates", "npm:4.0.1"],
             ["rollup-plugin-pnp-resolve", "npm:2.0.0"],
@@ -8295,6 +8297,15 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["assert-plus", "npm:1.0.0"],
             ["jsprim", "npm:1.4.1"],
             ["sshpk", "npm:1.16.1"]
+          ],
+          "linkType": "HARD",
+        }]
+      ]],
+      ["http2-proxy", [
+        ["npm:5.0.51", {
+          "packageLocation": "./.yarn/cache/http2-proxy-npm-5.0.51-df3a5f0c1f-05d51f1f19.zip/node_modules/http2-proxy/",
+          "packageDependencies": [
+            ["http2-proxy", "npm:5.0.51"]
           ],
           "linkType": "HARD",
         }]

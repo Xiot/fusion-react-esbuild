@@ -37,9 +37,9 @@ const handler = app.callback();
 
 http.createServer((req, res) => {
   const startTime = Date.now();
-  res.on('finish', () => {
-    console.log(`[${pad(Date.now() - startTime)}] ${res.statusCode} - ${req.method} ${req.url}`)
-  });
+  // res.on('finish', () => {
+  //   console.log(`[${pad(Date.now() - startTime)}] ${res.statusCode} - ${req.method} ${req.url}`)
+  // });
 
   handler(req,res);
 }).listen(DEV_SERVER_PORT, () => {

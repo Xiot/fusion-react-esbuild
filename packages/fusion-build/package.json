@@ -21,6 +21,7 @@
     "flow-bin": "^0.142.0",
     "fusion-cli": "^2.16.1",
     "http-proxy": "^1.18.1",
+    "http2-proxy": "^5.0.51",
     "rollup-plugin-pnp-resolve": "^2.0.0",
     "snowpack": "^3.0.11",
     "source-map-support": "^0.5.19",

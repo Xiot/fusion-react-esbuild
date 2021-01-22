@@ -29,7 +29,7 @@ module.exports = {
     port: 4001,
     hmr: true,
     // hmrPort: 4004,
-    secure: false,
+    secure: true,
     // hmrDelay: 1000,
     open: 'none',
     output: 'stream'

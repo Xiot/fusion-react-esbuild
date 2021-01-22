@@ -5,7 +5,7 @@ import path from 'path';
 import fs from 'fs';
 
 import clientConfig from './snowpack.client.config';
-import httpProxy from 'http-proxy';
+import httpProxy from 'http2-proxy';
 import {bus} from './bus';
 
 const {
@@ -39,41 +39,34 @@ bus.on('message', (type, args) => {
   }
 })
 
-const serverProxy = httpProxy.createProxy({
-  target: `http://localhost:${DEV_SERVER_PORT}`,
-  ssl: {
-    key: fs.readFileSync(path.join(process.cwd(), 'snowpack.key')),
-    cert: fs.readFileSync(path.join(process.cwd(), 'snowpack.crt'))
-  }
-});
-
 let snowpack;
 
-serverProxy.on('proxyRes', async (proxyRes, req, res) => {
-  // console.log('proxy res', proxyRes.statusCode, proxyRes.headers)
+const proxyOptions = {
+  hostname: 'localhost',
+  port: DEV_SERVER_PORT,
+  protocol: 'http',
+  proxyName: 'fusion-build',
+  async onRes(req, res, proxyRes) {
 
-  const bodyText = await readBody(proxyRes);
+    const accept = req.headers['accept'];
+    if (!accept.includes('html')) {
+      proxyRes.pipe(res);
+      return;
+    }
 
-  Object.entries(proxyRes.headers)
-    .filter(([key]) => {
-      if (key === 'content-length') {
-        return false;
-      }
-      if (key[0] === ':') return false;
-      return true;
-    })
-    .forEach(([key, value]) => res.setHeader(key, value));
-  const contentType = proxyRes.headers['content-type'];
+    const bodyText = await readBody(proxyRes);
+    const contentType = proxyRes.headers['content-type'];
 
-  if (contentType.includes('html')) {
-    const r = await snowpack.loadUrl('/index.html')
-    res.writeHead(proxyRes.statusCode, proxyRes.statusMessage);
-    res.end(r.contents.toString().replace('__RENDERED_ELEMENT__', bodyText));
-  } else {
-    res.writeHead(proxyRes.statusCode, proxyRes.statusMessage);
-    res.end(bodyText);
+    if (contentType.includes('html')) {
+      const r = await snowpack.loadUrl('/index.html')
+      res.writeHead(proxyRes.statusCode);
+      res.end(r.contents.toString().replace('__RENDERED_ELEMENT__', bodyText));
+    } else {
+      res.writeHead(proxyRes.statusCode);
+      res.end(bodyText);
+    }
   }
-})
+}
 
 const readBody = emitter => {
   return new Promise(resolve => {
@@ -92,7 +85,7 @@ const snowpackConfig = createConfiguration({
       await waitForServer();
 
       try {
-        serverProxy.web(req, res, {selfHandleResponse: true});
+        httpProxy.web(req, res, proxyOptions);
       } catch (ex) {
         console.log(ex);
         res.writeHead(500, {'content-type': 'application/json'});
@@ -102,14 +95,8 @@ const snowpackConfig = createConfiguration({
   ]
 });
 
-// console.log('CONFIG', snowpackConfig);
 snowpack = await startDevServer({
   config: snowpackConfig,
 });
-
-// const result = await build({
-//   config: snowpackConfig
-// });
-// console.log('result', result);
 
 })();

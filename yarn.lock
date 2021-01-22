@@ -5447,6 +5447,7 @@ fsevents@~2.1.2:
     flow-remove-types: ^2.142.0
     fusion-cli: ^2.16.1
     http-proxy: ^1.18.1
+    http2-proxy: ^5.0.51
     nodemon: ^2.0.7
     pirates: ^4.0.1
     rollup-plugin-pnp-resolve: ^2.0.0
@@ -6181,6 +6182,13 @@ fusion-plugin-i18n@2.4.8:
     jsprim: ^1.2.2
     sshpk: ^1.7.0
   checksum: d28227eed37cb0dae0e76c46b2a5e611c678808433e5642238f17dba7f2c9c8f8d1646122d57ec1a110ecc7e8b9f5b7aa0462f1e2a5fa3b41f2fca5a69af7edf
+  languageName: node
+  linkType: hard
+
+"http2-proxy@npm:^5.0.51":
+  version: 5.0.51
+  resolution: "http2-proxy@npm:5.0.51"
+  checksum: 05d51f1f19bcd411aeecaf2aa0e8e74395352939508e376f317593f48dc2c8361770b6df32ea4e99225fff6fec6ebe8adc487ad293528f81ff170ed0f5a21c3c
   languageName: node
   linkType: hard
 
