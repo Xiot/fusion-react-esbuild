@@ -41,6 +41,12 @@ build/Release
 node_modules/
 jspm_packages/
 snowpack/
+.yarn/*
+!.yarn/cache
+!.yarn/releases
+!.yarn/plugins
+!.yarn/sdks
+!.yarn/versions
 
 # TypeScript v1 declaration files
 typings/
@@ -105,3 +111,4 @@ dist
 .tern-port
 
 .fusion/
+lib/
