@@ -23,6 +23,7 @@
   },
   "scripts": {
     "dev": "fusion-build",
+    "build": "fusion-build client",
     "dev:fusion": "yarn run fusion dev --port 4080",
     "generate-certs": "npx devcert-cli localhost && mv localhost.key snowpack.key && mv localhost.cert snowpack.crt"
   },

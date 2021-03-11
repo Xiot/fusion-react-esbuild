@@ -5,7 +5,7 @@ export const TimePlugin = createPlugin({
   middleware() {
     return (ctx, next) => {
       if (ctx.method === 'GET' && ctx.path === '/time') {
-        ctx.body = {time: 'TIME ' +  Date.now()};
+        ctx.body = {time: 'SERVER ' +  Date.now()};
       }
       return next();
     };

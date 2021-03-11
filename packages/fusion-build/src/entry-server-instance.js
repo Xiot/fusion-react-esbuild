@@ -12,20 +12,13 @@ const {
 } = process.env;
 
 const app = appImport();
-console.log(html.toString()); //`<div>${2}</div>`);
+
 const ssrPlugin = createPlugin({
   deps: {},
   provides() {
     return ctx => {
       const {htmlAttrs, bodyAttrs, title, head, body} = ctx.template;
-      console.log('SSR',
-      htmlAttrs,
-      bodyAttrs,
-      title,
-      head.map(x => consumeSanitizedHTML(x)).join(''),
-      body.map(x => consumeSanitizedHTML(x)).join('')
-      )
-      // console.log('SSR', ctx.rendered);
+
       return "<html><body>" + body.map(x => consumeSanitizedHTML(x)).join('') + ctx.rendered + "</body></html>";
     }
   }
@@ -36,11 +29,6 @@ app.register(SSRBodyTemplateToken, ssrPlugin);
 const handler = app.callback();
 
 http.createServer((req, res) => {
-  const startTime = Date.now();
-  // res.on('finish', () => {
-  //   console.log(`[${pad(Date.now() - startTime)}] ${res.statusCode} - ${req.method} ${req.url}`)
-  // });
-
   handler(req,res);
 }).listen(DEV_SERVER_PORT, () => {
   console.log('server', DEV_SERVER_PORT)

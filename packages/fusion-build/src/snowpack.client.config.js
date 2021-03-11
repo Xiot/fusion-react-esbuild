@@ -1,7 +1,10 @@
 import path from 'path';
 
 const esbuild = {
-  define: {},
+  define: {
+    __NODE__: false,
+    __BROWSER__: true,
+  },
   target: ['es2020'],
   format: 'esm',
   keepNames: false,
@@ -28,9 +31,7 @@ module.exports = {
   devOptions: {
     port: 4001,
     hmr: true,
-    // hmrPort: 4004,
     secure: true,
-    // hmrDelay: 1000,
     open: 'none',
     output: 'stream'
   },

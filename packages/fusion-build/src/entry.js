@@ -5,6 +5,7 @@ import {bus} from './bus';
 import fs from 'fs';
 import path from 'path';
 import {install} from 'esinstall';
+import {createConfiguration, build} from 'snowpack';
 
 const buildDir = path.join(process.cwd(), 'snowpack/server');
 if (!fs.existsSync(buildDir)) {
@@ -18,10 +19,21 @@ fs.copyFileSync(
 
 const args = process.argv.slice(2);
 if (args[0] === 'client') {
-  const {execSync} = require('child_process');
   const configPath = require.resolve('fusion-build/lib/snowpack.client.config.js')
-  execSync(`snowpack build --config ${configPath}`);
-  return;
+
+  return import(configPath)
+    .then(rawConfig => {
+      const config = createConfiguration({
+        ...rawConfig,
+        buildOptions: {
+          ...rawConfig.buildOptions,
+          clean: true,
+        },
+      });
+      return build({config});
+    }).then(result => {
+      return result;
+    })
 }
 
 (async () => {
